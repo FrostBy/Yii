@@ -70,6 +70,14 @@ class PostController extends Controller
 		if(isset($_POST['Post']))
 		{
 			$model->attributes=$_POST['Post'];
+            $author_id=trim($_POST['Post']['author_id']);
+            if(!empty($author_id)){
+                $author_id=Yii::app()->user->id;
+            }
+            if (!$author = User::model()->findAllByPk($author_id)) {
+                throw new Exception('User not found');
+            }
+            $model->author_id = $author_id;
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
